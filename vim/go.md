@@ -1,5 +1,22 @@
 # Problems
 
+## coc.nvim can't share an daemon with vim-go
+
+One day, I found my `vim-go` and `coc.nvim` started their own gopls separately, and they are using almost the same amount of memory
+
+This seems unusual to me, so I decided to look it up
+
+I found [this blog](https://github.com/ericwq/golangIDE/blob/master/shared-gopls-daemon.md) which have found the root cause of this problem
+
+Basically it is because `vim-go` and `coc.nvim` have different `TEMPDIR` environment value when starting gopls instance, so they will create gopls instance with different arguments
+
+> gopls will use $TEMPDIR for auto-created unix socket
+
+So I followed the instructions and comment out couple lines of code from `coc.nvim` and they can share an gopls daemon
+
+> After all that, I found vim-go is continuously stopping the vim for scanning file, don't know what's going on. This gave me a really bad experience, so I stop using vim-go + gopls
+
+
 ## gopls report packages.Load error
 
 One day, I found that when I go into some third-party packages, the gopls will report 
